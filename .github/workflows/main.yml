@@ -1,6 +1,7 @@
 name: Build Windows App
 
-on: [push] # 触发构建的事件，这里是每次推送时
+on: workflow_dispatch # 触发构建的事件，这里是每次推送时
+  
 
 jobs:
   build:
