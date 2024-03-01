@@ -1,0 +1,34 @@
+name: Build Windows App
+
+on: [push] # 触发构建的事件，这里是每次推送时
+
+jobs:
+  build:
+    runs-on: windows-latest # 运行环境
+    steps:
+    - uses: actions/checkout@v2 # 检出代码
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14' # 设置Node.js版本
+    - name: Install dependencies
+      run: npm install # 安装依赖
+    - name: Build Electron app
+      run: npm run build # 构建应用，确保你有相应的脚本在package.json中
+    - name: Package Electron app
+      uses: samuelmeuli/action-electron-builder@v1
+      with:
+        # GitHub令牌，用于在构建过程中下载依赖项
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        # 打包应用为Windows可执行程序
+        args: --windows portable
+    - name: Upload to MinIO
+      env:
+        MINIO_ENDPOINT: your_minio_endpoint # 例如: play.min.io
+        MINIO_BUCKET: your_bucket_name
+        MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+        MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+      run: |
+        docker run --entrypoint=/bin/sh minio/mc -c "
+        mc alias set minio $MINIO_ENDPOINT $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+        mc cp dist/*.exe minio/$MINIO_BUCKET/"
