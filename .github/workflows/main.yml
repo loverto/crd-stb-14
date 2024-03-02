@@ -6,12 +6,26 @@ on: workflow_dispatch # 触发构建的事件，这里是每次推送时
 jobs:
   build:
     runs-on: windows-latest # 运行环境
+    defaults:
+      run:
+        shell: powershell
     steps:
     - uses: actions/checkout@v2 # 检出代码
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14' # 设置Node.js版本
+        node-version: '14' # 设置Node.js版本, winax支持的Node.js版本，根据需要调整
+        architecture: 'x86'
+    - name: Install Python and Build Tools
+      run: |
+        npm install --global --production windows-build-tools --vs2015
+      env:
+        npm_config_arch: "ia32"
+        
+    - name: Check Node.js and npm version
+      run: |
+        node -v
+        npm -v
     - name: Install dependencies
       run: npm install # 安装依赖
     - name: Build Electron app
