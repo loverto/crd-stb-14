@@ -18,7 +18,7 @@ jobs:
         architecture: 'x86'
     - name: Install Python and Build Tools
       run: |
-        npm install --global --production windows-build-tools --vs2017
+        npm install --global --production windows-build-tools@4.0.0 --vs2017
       env:
         npm_config_arch: "ia32"
         
