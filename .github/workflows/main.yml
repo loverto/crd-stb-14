@@ -29,18 +29,11 @@ jobs:
     - name: Install dependencies
       run: npm install # 安装依赖
     - name: Build Electron app
-      run: npm run release # 构建应用，确保你有相应的脚本在package.json中
-    - name: Package Electron app
-      uses: samuelmeuli/action-electron-builder@v1
-      with:
-        # GitHub令牌，用于在构建过程中下载依赖项
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        # 打包应用为Windows可执行程序
-        args: --windows portable
+      run: npm run dist-win # 构建应用，确保你有相应的脚本在package.json中
     - name: Upload to MinIO
       env:
-        MINIO_ENDPOINT: your_minio_endpoint # 例如: play.min.io
-        MINIO_BUCKET: your_bucket_name
+        MINIO_ENDPOINT: http://minio.xintonglu.top/ # 例如: play.min.io
+        MINIO_BUCKET: crd-stb-14-package-app
         MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
         MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
       run: |
