@@ -5,7 +5,7 @@ on: workflow_dispatch # 触发构建的事件，这里是每次推送时
 
 jobs:
   build:
-    runs-on: windows-latest # 运行环境
+    runs-on: windows-2019 # 运行环境
     defaults:
       run:
         shell: powershell
@@ -18,7 +18,7 @@ jobs:
         architecture: 'x86'
     - name: Install Python and Build Tools
       run: |
-        npm install --global --production windows-build-tools
+        npm install --global --production windows-build-tools 
       env:
         npm_config_arch: "ia32"
         
